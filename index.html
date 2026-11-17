@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Projeto escolar de robótica: uma maquete funcional de usina hidrelétrica.">
+  <title>Energia em Movimento | Hidrelétrica Robótica</title>
+  <style>
+    :root {
+      --navy: #071b33;
+      --navy-2: #0b2b4b;
+      --blue: #1687d9;
+      --sky: #72d0f4;
+      --green: #67df9a;
+      --ink: #10243a;
+      --muted: #61758a;
+      --paper: #f4f9fc;
+      --white: #fff;
+      --line: rgba(255,255,255,.14);
+      --shadow: 0 22px 60px rgba(3, 25, 48, .16);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+    body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--ink); background: var(--paper); line-height: 1.65; }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+    .topbar { position: sticky; top: 0; z-index: 20; background: rgba(5, 24, 45, .92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--line); }
+    .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: flex; align-items: center; gap: 11px; color: white; font-weight: 800; letter-spacing: -.03em; }
+    .brand-mark { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; color: var(--navy); background: linear-gradient(135deg, var(--sky), var(--green)); font-size: 20px; }
+    .nav-links { display: flex; align-items: center; gap: 23px; color: #d8e9f7; font-size: .88rem; font-weight: 650; }
+    .nav-links a { transition: color .2s ease; }
+    .nav-links a:hover { color: var(--green); }
+    .menu-btn { display: none; border: 1px solid var(--line); color: white; background: transparent; border-radius: 10px; padding: 9px 12px; font-size: 1.2rem; cursor: pointer; }
+    .hero { position: relative; overflow: hidden; color: white; background: radial-gradient(circle at 80% 20%, rgba(22,135,217,.32), transparent 32%), radial-gradient(circle at 15% 85%, rgba(103,223,154,.14), transparent 30%), linear-gradient(135deg, #06182d 0%, #0a3154 58%, #07537a 100%); padding: 105px 0 100px; }
+    .hero:after { content: ""; position: absolute; width: 520px; height: 520px; right: -180px; bottom: -300px; border: 1px solid rgba(114,208,244,.24); border-radius: 50%; box-shadow: 0 0 0 45px rgba(114,208,244,.035), 0 0 0 90px rgba(114,208,244,.025); }
+    .hero-grid { display: grid; grid-template-columns: 1.12fr .88fr; gap: 55px; align-items: center; position: relative; z-index: 1; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; padding: 7px 12px; border: 1px solid rgba(103,223,154,.35); border-radius: 99px; color: #baf6d2; background: rgba(103,223,154,.08); text-transform: uppercase; font-size: .72rem; font-weight: 800; letter-spacing: .12em; }
+    .eyebrow:before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 14px var(--green); }
+    h1 { font-size: clamp(2.8rem, 6vw, 5.3rem); line-height: .99; letter-spacing: -.065em; margin: 22px 0; max-width: 720px; }
+    h1 span { color: var(--sky); }
+    .hero p { color: #c4d9e9; max-width: 600px; font-size: 1.08rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 13px; margin-top: 30px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 13px 19px; border-radius: 12px; font-weight: 800; transition: transform .2s, box-shadow .2s, background .2s; }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-primary { color: #062139; background: linear-gradient(110deg, var(--sky), var(--green)); box-shadow: 0 12px 30px rgba(67,205,159,.18); }
+    .btn-secondary { color: white; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); }
+    .hero-art { min-height: 340px; display: grid; place-items: center; position: relative; }
+    .water-card { width: min(100%, 390px); aspect-ratio: 1 / .9; border: 1px solid rgba(255,255,255,.2); border-radius: 28px; background: linear-gradient(145deg, rgba(255,255,255,.13), rgba(255,255,255,.035)); box-shadow: 0 30px 80px rgba(0,0,0,.22); display: grid; place-items: center; position: relative; overflow: hidden; }
+    .water-card:before, .water-card:after { content: ""; position: absolute; width: 500px; height: 120px; border: 2px solid rgba(114,208,244,.4); border-radius: 50%; transform: rotate(-24deg); }
+    .water-card:before { top: 45px; left: -90px; }
+    .water-card:after { bottom: 15px; right: -130px; }
+    .dam-illustration { position: relative; z-index: 1; font-size: 8rem; filter: drop-shadow(0 15px 20px rgba(0,0,0,.2)); animation: float 5s ease-in-out infinite; }
+    .orbit-label { position: absolute; z-index: 2; padding: 8px 12px; border-radius: 10px; color: #e6f7ff; background: rgba(5,24,45,.75); border: 1px solid rgba(255,255,255,.17); font-size: .78rem; font-weight: 750; }
+    .label-one { top: 25px; right: 20px; } .label-two { bottom: 27px; left: 18px; }
+    section { padding: 92px 0; }
+    .section-head { max-width: 690px; margin-bottom: 38px; }
+    .kicker { color: #1386b9; font-size: .75rem; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; }
+    h2 { color: var(--navy); font-size: clamp(2rem, 4vw, 3.15rem); line-height: 1.08; letter-spacing: -.045em; margin: 10px 0 15px; }
+    .section-head p, .muted { color: var(--muted); }
+    .problem { background: white; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 42px; align-items: center; }
+    .problem-visual { min-height: 300px; border-radius: 24px; padding: 30px; color: white; background: linear-gradient(145deg, #0a2b49, #126c91); box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; position: relative; }
+    .problem-visual:after { content: "⚡"; position: absolute; font-size: 12rem; right: 15px; bottom: -48px; opacity: .11; }
+    .problem-visual strong { font-size: 1.25rem; max-width: 260px; }
+    .stat-row { display: flex; gap: 12px; flex-wrap: wrap; position: relative; z-index: 1; }
+    .stat { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.14); padding: 11px 14px; border-radius: 12px; font-size: .82rem; }
+    .stat b { display: block; color: var(--green); font-size: 1.1rem; }
+    .solution { background: #eaf5fb; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .info-card { padding: 25px; background: white; border: 1px solid #e0edf4; border-radius: 19px; box-shadow: 0 12px 35px rgba(9,49,78,.055); transition: transform .25s, box-shadow .25s; }
+    .info-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+    .icon { width: 47px; height: 47px; display: grid; place-items: center; border-radius: 14px; background: #e5f7f0; font-size: 1.4rem; margin-bottom: 17px; }
+    .info-card h3 { color: var(--navy); margin: 0 0 8px; font-size: 1.12rem; }
+    .info-card p { color: var(--muted); margin: 0; font-size: .94rem; }
+    .process { background: var(--navy); color: white; }
+    .process h2 { color: white; }
+    .process .section-head p { color: #b6ccdc; }
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; counter-reset: step; }
+    .step { padding: 22px 19px; border: 1px solid rgba(255,255,255,.13); background: rgba(255,255,255,.055); border-radius: 17px; }
+    .step-num { color: var(--green); font-weight: 900; font-size: .8rem; letter-spacing: .12em; }
+    .step h3 { margin: 12px 0 8px; font-size: 1.05rem; }
+    .step p { color: #b9ccdc; font-size: .9rem; margin: 0; }
+    .flowline { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 28px; color: #bcebd2; font-size: .86rem; font-weight: 800; flex-wrap: wrap; }
+    .flowline span { padding: 9px 13px; border: 1px solid rgba(103,223,154,.28); border-radius: 99px; background: rgba(103,223,154,.07); }
+    .access { background: white; }
+    .access-panel { display: grid; grid-template-columns: .8fr 1.2fr; gap: 34px; padding: 34px; border-radius: 25px; background: linear-gradient(135deg, #e6f6ff, #effbf4); }
+    .access-symbol { display: grid; place-items: center; min-height: 220px; border-radius: 19px; color: white; font-size: 5rem; background: linear-gradient(145deg, #0b4770, #1687a8); }
+    .access-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-content: center; }
+    .access-item { background: rgba(255,255,255,.8); border: 1px solid rgba(12,75,105,.08); padding: 14px; border-radius: 13px; font-size: .9rem; color: #38536a; }
+    .access-item b { display: block; color: var(--navy); margin-bottom: 3px; }
+    .robotics { background: #eaf5fb; }
+    .robotics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; align-items: start; }
+    .robotics-copy { padding: 29px; border-radius: 22px; background: white; box-shadow: 0 12px 35px rgba(9,49,78,.06); }
+    .component-list { display: grid; gap: 12px; margin-top: 22px; }
+    .component { display: flex; gap: 13px; align-items: flex-start; padding-bottom: 12px; border-bottom: 1px solid #e8f0f5; }
+    .component:last-child { border: 0; padding-bottom: 0; }
+    .component .icon { flex: 0 0 43px; width: 43px; height: 43px; margin: 0; }
+    .component b { color: var(--navy); display: block; }
+    .component span { color: var(--muted); font-size: .9rem; }
+    .circuit { border-radius: 22px; padding: 28px; color: white; background: linear-gradient(150deg, #071d34, #0b4569); min-height: 100%; }
+    .circuit h3 { margin: 0 0 8px; font-size: 1.35rem; }
+    .circuit p { color: #c0d5e4; font-size: .92rem; }
+    .diagram { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center; margin: 25px 0; }
+    .node { text-align: center; padding: 16px 8px; border-radius: 14px; background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.16); }
+    .node .big { display: block; font-size: 1.8rem; }
+    .node small { color: #d0e5f3; font-weight: 750; }
+    .arrow { color: var(--green); font-size: 1.4rem; font-weight: 900; }
+    .led-demo { display: flex; align-items: center; gap: 13px; padding: 13px 15px; background: rgba(103,223,154,.09); border: 1px solid rgba(103,223,154,.23); border-radius: 13px; }
+    .led { width: 17px; height: 17px; border-radius: 50%; background: #6bff9c; box-shadow: 0 0 9px #6bff9c, 0 0 23px #6bff9c; animation: blink 1.8s infinite alternate; }
+    .team { background: white; }
+    .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+    .person { padding: 23px 16px; border: 1px solid #e1edf3; background: #fbfdff; border-radius: 17px; text-align: center; }
+    .avatar { width: 54px; height: 54px; margin: 0 auto 12px; border-radius: 17px; display: grid; place-items: center; color: #07314d; font-size: 1.25rem; font-weight: 900; background: linear-gradient(135deg, var(--sky), var(--green)); }
+    .person b { color: var(--navy); display: block; }
+    .person small { color: var(--muted); }
+    .creator { margin-top: 18px; color: var(--muted); font-size: .9rem; text-align: center; }
+    .closing { padding: 75px 0; color: white; text-align: center; background: linear-gradient(120deg, #08233e, #0b5578); }
+    .closing h2 { color: white; max-width: 720px; margin: 0 auto 14px; }
+    .closing p { color: #c5dce9; max-width: 650px; margin: 0 auto 25px; }
+    footer { padding: 24px 0; color: #b6c9d8; background: #06182b; font-size: .82rem; }
+    footer .container { display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    @keyframes float { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-13px) rotate(2deg); } }
+    @keyframes blink { from { opacity: .55; } to { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { *, *:before, *:after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } .reveal { opacity: 1; transform: none; } }
+    @media (max-width: 850px) {
+      .nav-links { display: none; position: absolute; top: 76px; left: 0; right: 0; padding: 18px 22px 23px; flex-direction: column; align-items: flex-start; background: #071b33; border-bottom: 1px solid var(--line); }
+      .nav-links.open { display: flex; }
+      .menu-btn { display: block; }
+      .hero-grid, .two-col, .access-panel, .robotics-grid { grid-template-columns: 1fr; }
+      .hero { padding: 75px 0; }
+      .hero-art { min-height: 290px; }
+      .cards { grid-template-columns: 1fr 1fr; }
+      .steps { grid-template-columns: 1fr 1fr; }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
+      .container { width: min(100% - 30px, 1120px); }
+      section { padding: 68px 0; }
+      .cards, .steps, .access-list { grid-template-columns: 1fr; }
+      .access-panel { padding: 18px; }
+      .diagram { grid-template-columns: 1fr; }
+      .arrow { transform: rotate(90deg); text-align: center; }
+      .hero-art { min-height: 250px; }
+      .dam-illustration { font-size: 6.5rem; }
+      .team-grid { gap: 10px; }
+      .person { padding: 18px 8px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav container" aria-label="Menu principal">
+      <a class="brand" href="#inicio"><span class="brand-mark">⚡</span><span>ENERGIA EM MOVIMENTO</span></a>
+      <button class="menu-btn" id="menuBtn" aria-label="Abrir menu" aria-expanded="false">☰</button>
+      <div class="nav-links" id="navLinks">
+        <a href="#problema">O problema</a><a href="#solucao">A solução</a><a href="#funcionamento">Como funciona</a><a href="#acessibilidade">Acessibilidade</a><a href="#robotica">Robótica</a><a href="#equipe">Equipe</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="container hero-grid">
+        <div class="reveal">
+          <span class="eyebrow">Projeto escolar de robótica</span>
+          <h1>Energia que nasce do <span>movimento.</span></h1>
+          <p>Uma maquete funcional para entender como a força da água pode ser transformada em energia elétrica — unindo ciência, tecnologia e criatividade.</p>
+          <div class="hero-actions"><a class="btn btn-primary" href="#funcionamento">Descobrir como funciona <span>↘</span></a><a class="btn btn-secondary" href="#robotica">Conhecer a maquete</a></div>
+        </div>
+        <div class="hero-art reveal">
+          <div class="water-card"><span class="orbit-label label-one">💧 Força da água</span><div class="dam-illustration" aria-label="Ícone de barragem">🏞️</div><span class="orbit-label label-two">⚡ Energia elétrica</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="problem" id="problema">
+      <div class="container two-col">
+        <div class="section-head reveal">
+          <span class="kicker">01 — O desafio</span><h2>Como produzir energia causando menos impactos?</h2>
+          <p>A sociedade precisa de energia elétrica para iluminar casas, movimentar equipamentos, manter hospitais funcionando e permitir a comunicação. Porém, algumas formas de geração dependem da queima de combustíveis fósseis, que libera gases poluentes e contribui para as mudanças climáticas.</p>
+          <p>O desafio é produzir energia de maneira confiável, considerando também os impactos ambientais e sociais de cada fonte.</p>
+        </div>
+        <div class="problem-visual reveal"><strong>Energia é essencial. Escolher como produzi-la também é.</strong><div class="stat-row"><div class="stat"><b>♻️</b>Impacto ambiental</div><div class="stat"><b>⚡</b>Demanda de energia</div><div class="stat"><b>🌎</b>Uso responsável</div></div></div>
+      </div>
+    </section>
+
+    <section class="solution" id="solucao">
+      <div class="container">
+        <div class="section-head reveal"><span class="kicker">02 — A alternativa</span><h2>A hidrelétrica aproveita a força da água</h2><p>Uma usina hidrelétrica transforma a energia da água em movimento em energia elétrica. É uma fonte renovável porque utiliza o ciclo natural da água, mas precisa ser planejada com cuidado: barragens podem alterar rios, habitats e a vida de comunidades próximas.</p></div>
+        <div class="cards">
+          <article class="info-card reveal"><div class="icon">💧</div><h3>Fonte renovável</h3><p>A água é renovada pelo ciclo da natureza. A geração depende da disponibilidade de água nos rios e reservatórios.</p></article>
+          <article class="info-card reveal"><div class="icon">⚡</div><h3>Geração em grande escala</h3><p>Usinas podem produzir grandes quantidades de eletricidade para abastecer cidades, indústrias e serviços.</p></article>
+          <article class="info-card reveal"><div class="icon">🌱</div><h3>Planejamento responsável</h3><p>É importante avaliar os efeitos sobre os ecossistemas, os peixes, a vegetação e as comunidades da região.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="process" id="funcionamento">
+      <div class="container">
+        <div class="section-head reveal"><span class="kicker">03 — Entenda o processo</span><h2>Como uma hidrelétrica funciona?</h2><p>A água armazenada em um reservatório passa por estruturas da usina e movimenta uma turbina. Esse movimento aciona um gerador, que transforma energia mecânica em energia elétrica.</p></div>
+        <div class="steps">
+          <article class="step reveal"><span class="step-num">ETAPA 01</span><h3>Reservatório</h3><p>A água fica armazenada em uma área represada, em uma altura que permite aproveitar sua energia potencial.</p></article>
+          <article class="step reveal"><span class="step-num">ETAPA 02</span><h3>Conduto forçado</h3><p>A água passa por grandes tubulações e ganha velocidade ao seguir em direção à turbina.</p></article>
+          <article class="step reveal"><span class="step-num">ETAPA 03</span><h3>Turbina</h3><p>A força da água faz as pás da turbina girarem. Esse movimento é transmitido ao gerador.</p></article>
+          <article class="step reveal"><span class="step-num">ETAPA 04</span><h3>Gerador e rede</h3><p>O gerador converte o movimento em eletricidade. Depois, transformadores ajustam a tensão para a transmissão e distribuição.</p></article>
+        </div>
+        <div class="flowline reveal"><span>Reservatório</span> → <span>Água em movimento</span> → <span>Turbina</span> → <span>Gerador</span> → <span>Rede elétrica</span></div>
+      </div>
+    </section>
+
+    <section class="access" id="acessibilidade">
+      <div class="container">
+        <div class="section-head reveal"><span class="kicker">04 — Energia para todos</span><h2>Acessibilidade também faz parte da tecnologia</h2><p>Quando falamos de acessibilidade, pensamos em garantir que todas as pessoas possam utilizar espaços, serviços e informações com autonomia e segurança. No setor de energia, isso envolve tanto o acesso à eletricidade quanto instalações e informações inclusivas.</p></div>
+        <div class="access-panel reveal">
+          <div class="access-symbol" aria-hidden="true">♿</div>
+          <div class="access-list">
+            <div class="access-item"><b>Energia essencial</b>Eletricidade confiável é importante para iluminação, comunicação, estudo e equipamentos de apoio.</div>
+            <div class="access-item"><b>Espaços acessíveis</b>Usinas e áreas de visitação devem considerar rampas, circulação segura e sinalização adequada.</div>
+            <div class="access-item"><b>Informação para todos</b>Explicações claras, letras legíveis e recursos visuais ajudam diferentes pessoas a compreender o projeto.</div>
+            <div class="access-item"><b>Participação</b>Projetos e decisões devem considerar as necessidades das pessoas com deficiência e da comunidade.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="robotics" id="robotica">
+      <div class="container">
+        <div class="section-head reveal"><span class="kicker">05 — Mão na massa</span><h2>Robótica aplicada à nossa maquete</h2><p>Para deixar a maquete funcional, montamos um sistema elétrico simples que produz movimento e luz. Assim, conseguimos demonstrar visualmente uma parte do funcionamento de uma usina hidrelétrica.</p></div>
+        <div class="robotics-grid">
+          <div class="robotics-copy reveal">
+            <h3>Componentes utilizados</h3>
+            <div class="component-list">
+              <div class="component"><div class="icon">⚙️</div><div><b>Motor DC</b><span>É alimentado pela bateria e transforma energia elétrica em movimento de rotação.</span></div></div>
+              <div class="component"><div class="icon">🌀</div><div><b>Turbina / mecanismo giratório</b><span>É a parte que gira na maquete, representando a turbina de uma usina hidrelétrica real.</span></div></div>
+              <div class="component"><div class="icon">🔋</div><div><b>Bateria</b><span>Fornece a energia elétrica necessária para alimentar o motor.</span></div></div>
+              <div class="component"><div class="icon">🌈</div><div><b>LED RGB</b><span>Acende quando o mecanismo está girando, criando um efeito visual que representa a geração de energia.</span></div></div>
+            </div>
+          </div>
+          <div class="circuit reveal">
+            <h3>O sistema da maquete</h3><p>O circuito foi pensado para demonstrar a relação entre alimentação elétrica, movimento e sinalização luminosa.</p>
+            <div class="diagram">
+              <div class="node"><span class="big">🔋</span><small>Bateria</small></div><div class="arrow">→</div><div class="node"><span class="big">⚙️</span><small>Motor DC</small></div>
+            </div>
+            <div class="diagram">
+              <div class="node"><span class="big">🌀</span><small>Giro</small></div><div class="arrow">→</div><div class="node"><span class="big">🌈</span><small>LED RGB</small></div>
+            </div>
+            <div class="led-demo"><span class="led"></span><span><b>Indicação visual:</b> o LED acende durante o funcionamento do sistema.</span></div>
+            <p style="font-size:.82rem;margin-top:18px">Observação: na nossa maquete, a bateria alimenta o motor. Portanto, o conjunto simula o movimento da turbina; não é a água que gera eletricidade no protótipo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="team" id="equipe">
+      <div class="container">
+        <div class="section-head reveal"><span class="kicker">06 — Quem fez acontecer</span><h2>Nossa equipe</h2><p>Este projeto foi desenvolvido em grupo, reunindo ideias de robótica, pesquisa e construção de uma maquete demonstrativa.</p></div>
+        <div class="team-grid">
+          <div class="person reveal"><div class="avatar">HG</div><b>Henrique Godoy</b><small>Integrante</small></div>
+          <div class="person reveal"><div class="avatar">VR</div><b>Vitor Renan</b><small>Integrante</small></div>
+          <div class="person reveal"><div class="avatar">KA</div><b>Kaique de Almeida</b><small>Integrante</small></div>
+          <div class="person reveal"><div class="avatar">DV</div><b>Diogo Vinícios</b><small>Integrante</small></div>
+        </div>
+        <p class="creator">Site desenvolvido por <strong>Henrique Godoy</strong>.</p>
+      </div>
+    </section>
+
+    <section class="closing">
+      <div class="container reveal"><span class="eyebrow">Ciência • Tecnologia • Sustentabilidade</span><h2>Aprender como a energia funciona é o primeiro passo para pensar no futuro.</h2><p>Com a nossa maquete, exploramos conceitos de geração de energia, eletrônica e robótica de uma forma prática e visual.</p><a class="btn btn-primary" href="#inicio">Voltar ao início ↑</a></div>
+    </section>
+  </main>
+
+  <footer><div class="container"><span>Energia em Movimento — Projeto escolar de robótica</span><span>Desenvolvido por Henrique Godoy · 2026</span></div></footer>
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    menuBtn.addEventListener('click', () => {
+      const opened = navLinks.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', String(opened));
+      menuBtn.textContent = opened ? '✕' : '☰';
+    });
+    navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    }));
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
